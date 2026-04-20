@@ -1,0 +1,115 @@
+---
+grails:
+  profile: web
+  codegen:
+    defaultPackage: app.timali
+  gorm:
+    reactor:
+      events: false
+
+  # ========== CONFIGURAÇÃO CORS ==========
+  cors:
+    enabled: true
+    mappings:
+      '/api/**':
+        allowedOrigins:
+          - 'http://localhost:3000'
+          - 'http://localhost:3001'
+        allowedMethods:
+          - 'GET'
+          - 'POST'
+          - 'PUT'
+          - 'DELETE'
+          - 'OPTIONS'
+          - 'PATCH'
+        allowedHeaders:
+          - '*'
+          - 'Authorization'
+          - 'Content-Type'
+          - 'Accept'
+          - 'X-Requested-With'
+        allowCredentials: true
+        maxAge: 3600
+  # =======================================
+
+  plugin:
+    springsecurity:
+      userLookup:
+        userDomainClassName: 'app.timali.Usuario'
+        authorityJoinClassName: 'app.timali.UsuarioRole'
+      authority:
+        className: 'app.timali.Role'
+
+      # Habilita CORS no Spring Security
+      cors:
+        enabled: true
+
+      # Desativa CSRF (Obrigatório para APIs REST stateless)
+      csrf:
+        active: false
+
+      # Regras de acesso estático
+      controllerAnnotations:
+        staticRules:
+          - {pattern: '/',               access: ['permitAll']}
+          - {pattern: '/error',          access: ['permitAll']}
+          - {pattern: '/api/login',      access: ['permitAll']}
+          - {pattern: '/api/**',         access: ['isFullyAuthenticated()']}
+          - {pattern: '/**',             access: ['permitAll']}
+
+      # Configuração REST e JWT
+      rest:
+        login:
+          active: true
+          endpointUrl: '/api/login'
+
+        token:
+          storage:
+            jwt:
+              secret: 'timali-super-secret-key-for-jwt-2026-xyz-must-be-long-enough-to-work'
+              expiration: 3600
+
+        # Habilita CORS no REST
+        cors:
+          enabled: true
+
+info:
+  app:
+    name: '@info.app.name@'
+    version: '@info.app.version@'
+    grailsVersion: '@info.app.grailsVersion@'
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+hibernate:
+  cache:
+    queries: false
+  dialect: org.hibernate.dialect.PostgreSQLDialect
+  hbm2ddl:
+    auto: update  # Mudei para 'update' para não apagar dados a cada reinício
+  show_sql: true
+  format_sql: true
+
+dataSource:
+  pooled: true
+  driverClassName: org.postgresql.Driver
+  username: timali_user
+  password: timali_password
+  dbCreate: update  # Mudei para 'update' para não apagar dados
+
+environments:
+  development:
+    dataSource:
+      dbCreate: update  # Mudei para 'update' - use 'create' apenas para recriar
+      url: jdbc:postgresql://localhost:5433/timali_db
+      driverClassName: org.postgresql.Driver
+      username: timali_user
+      password: timali_password
+      properties:
+        hibernate:
+          hbm2ddl:
+            auto: update  # Mudei para 'update'
+          show_sql: true
+          format_sql: true
