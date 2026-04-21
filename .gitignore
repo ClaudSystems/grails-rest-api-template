@@ -1,12 +1,34 @@
-Thumbs.db
-.DS_Store
-.gradle
+﻿# Grails
+.gradle/
 build/
 out/
-.idea
+target/
+
+# IntelliJ IDEA
+.idea/
 *.iml
-*.ipr
 *.iws
-.project
-.settings
+*.ipr
+
+# Eclipse
 .classpath
+.project
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+
+# Docker
+*.env
+docker-compose.override.yml
+
+# Application
+logs/
+*.pid
